@@ -1,0 +1,51 @@
+---
+title:  "Hatsumi Taikai"
+date:   2023-10-06 16:00:00 +0200
+last_modified_at: {{ now.strftime("%Y-%m-%d %H:%M:%S %z") }}
+categories: tournaments
+lang: pl
+---
+{% raw %}
+Zapraszamy Was na drugi turniej MERS w Krakowie!
+
+{% capture fig_img %}
+![Hatsumi Taikai]({{ "/assets/images/2023-10-06-hatsumi-taikai.png" | relative_url }})
+{% endcapture %}
+
+<figure>
+  {{ fig_img | markdownify | remove: "<p>" | remove: "</p>" }}
+</figure>
+
+## O turnieju
+
+* Data: 17-18 lutego 2024 (sobota-niedziela)
+* Miejsce: TBD, Kraków
+* Zasady: EMA Riichi 2016
+* Hanchany: 8
+* Wpisowe: TBD, ok. 150 PLN (~34 EUR)
+* Limit osób: 84
+* Obserwator EMA: TBD
+* Sędziowie:
+  - Mateusz Maćkowski
+  - TBD
+
+Punkty będą śledzone za pomocą mobilnej aplikacji [Mahjong Tracker](https://mahjongtracker.com/) - polecamy zapoznać się
+z jej działaniem przed turniejem.
+
+## Agenda
+
+TBD
+
+## Rejestracja
+
+**[Zapisy na turniej](https://forms.gle/Q9MxGdNQU1fJbf746)**
+
+**UWAGA:** Rejestracja zostanie zamknięta 31 stycznia &mdash; jest to ostatni dzień na wysłanie ważnego zgłoszenia.
+
+## Gracze
+<small>Ostatnia aktualizacja: {{ page.last_modified_at | date:"%Y-%m-%d %H:%M" }}</small>
+{% endraw %}
+| Nr | Imię i nazwisko                          | Kraj                 | EMA ID                                                              |
+|---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
+{% for val in data %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_pl.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+{% endfor %}
