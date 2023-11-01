@@ -46,7 +46,22 @@ TBD
 
 <small>Last updated: {{ page.last_modified_at | date:"%Y-%m-%d %H:%M" }}</small>
 {% endraw %}
+<div class="progress" style="margin-bottom: 0.5em">
+	<div
+		class="progress-bar progress-bar-striped"
+		role="progressbar"
+		style="width: calc(100%*{{ data | length }}/84);"
+		aria-valuenow="{{ data | length }}"
+		aria-valuemin="0"
+		aria-valuemax="84">
+		{{ data | length }}/84
+	</div>
+</div>
+
+<div id="biggus-tablus" markdown="block">
+
 | Nr | Name                                     | Country              | EMA ID                                                              |
 |---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
 {% for val in data %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
 {% endfor %}
+</div>
