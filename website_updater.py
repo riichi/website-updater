@@ -92,7 +92,6 @@ def request_responses(data_url: str) -> List[Dict[str, str]]:
     csv_data = request_csv(data_url)
     responses = list(csv.DictReader(io.StringIO(csv_data)))
     responses = list(map(process_response, responses))
-    responses.sort(key=lambda val: (val['last_name'], val['first_name']))
     return responses
 
 
