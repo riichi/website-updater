@@ -127,7 +127,7 @@ def create_pr(repo: str, branch_name: str, now: datetime.datetime, dry_run: bool
 
 
 def calc_countries(responses: List[dict]):
-    return len(set([val["country_en"] for val in responses]))
+    return len(set(val["country_en"] for val in responses))
 
 
 def calc_mers(responses: List[dict]):
