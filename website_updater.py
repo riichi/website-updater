@@ -147,7 +147,7 @@ def calc_mers(responses: List[dict]):
     elif num_countries > 9:
         mers += 1
 
-    return mers
+    return f"{mers:.1f}"
 
 
 if __name__ == "__main__":
