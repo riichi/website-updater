@@ -54,7 +54,31 @@ TBD
 		aria-valuenow="{{ data | length }}"
 		aria-valuemin="0"
 		aria-valuemax="84">
-		{{ data | length }}/84
+		Players: {{ data | length }}/84
+	</div>
+</div>
+
+<div class="progress" style="margin-bottom: 0.5em; font-size: 0.5rem; height: 0.7rem">
+	<div
+		class="progress-bar progress-bar-striped bg-success"
+		role="progressbar"
+		style="width: calc(100%*{{ [num_countries, 10] | min }}/10);"
+		aria-valuenow="{{ [num_countries, 10] | min }}"
+		aria-valuemin="0"
+		aria-valuemax="10">
+		Participating countries: {{ num_countries }}
+	</div>
+</div>
+
+<div class="progress" style="margin-bottom: 0.5em; font-size: 0.5rem; height: 0.7rem">
+	<div
+		class="progress-bar progress-bar-striped bg-success"
+		role="progressbar"
+		style="width: calc(100%*{{ num_mers }}/4);"
+		aria-valuenow="{{ num_mers }}"
+		aria-valuemin="0"
+		aria-valuemax="4">
+		<span>MERS <a href="http://mahjong-europe.org/ranking/Basicsranking.html" class="text-info">(what's this?)</a>: {{ num_mers }}/4</span>
 	</div>
 </div>
 
