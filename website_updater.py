@@ -72,6 +72,8 @@ def main():
 
 def process(data_url: str, template_dir: str, repo: str, dry_run: bool):
     responses = request_responses(data_url)
+    num_countries = calc_countries(responses)
+    num_mers = calc_mers(responses)
 
     env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape())
 
@@ -90,7 +92,9 @@ def process(data_url: str, template_dir: str, repo: str, dry_run: bool):
         log.info("Writing to: %s", new_path)
 
         with open(str(new_path)[: -len(".tmpl")], "w") as f:
-            rendered = template.render(data=responses, now=now)
+            rendered = template.render(
+                data=responses, num_countries=num_countries, num_mers=num_mers, now=now
+            )
             if dry_run:
                 log.info("%s", rendered)
             else:
@@ -120,6 +124,29 @@ def create_pr(repo: str, branch_name: str, now: datetime.datetime, dry_run: bool
     execute_cmd(["git", "commit", "-a", "-m", title], repo, dry_run)
     execute_cmd(["git", "push", "-u", "origin", branch_name], repo, dry_run)
     execute_cmd(["gh", "pr", "create", "--title", title, "--body", body], repo, dry_run)
+
+
+def calc_countries(responses: List[dict]):
+    return len(set([val["country_en"] for val in responses]))
+
+
+def calc_mers(responses: List[dict]):
+    num_players = len(responses)
+    num_countries = calc_countries(responses)
+
+    mers = 2
+
+    if 40 < num_players <= 80:
+        mers += 0.5
+    elif num_players > 80:
+        mers += 1
+
+    if 5 < num_countries <= 9:
+        mers += 0.5
+    elif num_countries > 9:
+        mers += 1
+
+    return mers
 
 
 if __name__ == "__main__":
