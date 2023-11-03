@@ -91,7 +91,8 @@ def process(data_url: str, template_dir: str, repo: str, dry_run: bool):
         new_path = pathlib.Path(repo) / relative_path
         log.info("Writing to: %s", new_path)
 
-        with open(str(new_path)[: -len(".tmpl")], "w") as f:
+        new_path = new_path.resolve()
+        with (new_path.parent / new_path.stem).open("w") as f:
             rendered = template.render(
                 data=responses, num_countries=num_countries, num_mers=num_mers, now=now
             )
