@@ -24,17 +24,20 @@ We invite you to the second MERS tournament in Kraków!
 * Hanchans: 8
 * Entry fee: TBD, about 150 PLN (~34 EUR)
 * Participant limit: 84
-* EMA Observer: TBD
+* EMA Observer: coming soon!
 * Referees:
   - Mateusz Maćkowski
-  - TBD
+  - more coming soon!
 
 Scores will be tracked using [Mahjong Tracker](https://mahjongtracker.com/) - players are advised to familiarize
 themselves with the app before the tournament.
-
+{% endraw %}
+With representants of **{{ num_countries }}** different countries and a total number of **{{ data | length }}** contestants, the current MERS tournament ranking is **{{ num_mers }}** (with 4 being the maximum).\
+<small>This statistic updates automatically. The details on how the weight is calculated can be found on [the EMA website](http://mahjong-europe.org/ranking/Basicsranking.html).</small>
+{% raw %}
 ## Agenda
 
-TBD
+Coming soon!
 
 ## Registration
 
@@ -54,31 +57,7 @@ TBD
 		aria-valuenow="{{ data | length }}"
 		aria-valuemin="0"
 		aria-valuemax="84">
-		Players: {{ data | length }}/84
-	</div>
-</div>
-
-<div class="progress" style="margin-bottom: 0.5em; font-size: 0.5rem; height: 0.7rem">
-	<div
-		class="progress-bar progress-bar-striped bg-success"
-		role="progressbar"
-		style="width: calc(100%*{{ [num_countries, 10] | min }}/10);"
-		aria-valuenow="{{ [num_countries, 10] | min }}"
-		aria-valuemin="0"
-		aria-valuemax="10">
-		Participating countries: {{ num_countries }}
-	</div>
-</div>
-
-<div class="progress" style="margin-bottom: 0.5em; font-size: 0.5rem; height: 0.7rem">
-	<div
-		class="progress-bar progress-bar-striped bg-success"
-		role="progressbar"
-		style="width: calc(100%*{{ num_mers }}/4);"
-		aria-valuenow="{{ num_mers }}"
-		aria-valuemin="0"
-		aria-valuemax="4">
-		<span>MERS <a href="http://mahjong-europe.org/ranking/Basicsranking.html" class="text-info">(what's this?)</a>: {{ num_mers }}/4</span>
+		{{ data | length }}/84
 	</div>
 </div>
 

@@ -24,17 +24,20 @@ Zapraszamy Was na drugi turniej MERS w Krakowie!
 * Hanchany: 8
 * Wpisowe: TBD, ok. 150 PLN (~34 EUR)
 * Limit osób: 84
-* Obserwator EMA: TBD
+* Obserwator EMA: ogłosimy wkrótce!
 * Sędziowie:
   - Mateusz Maćkowski
-  - TBD
+  - więcej wkrótce!
 
 Punkty będą śledzone za pomocą mobilnej aplikacji [Mahjong Tracker](https://mahjongtracker.com/) - polecamy zapoznać się
 z jej działaniem przed turniejem.
-
+{% endraw %}
+Z reprezentantami **{{ num_countries }}** krajów i łączną liczbą **{{ data | length }}** graczy, aktualny ranking turnieju MERS wynosi **{{ num_mers }}** (4 to maksimum).\
+<small>Statystyka ta aktualizuje się automatycznie. Szczegóły dotyczące sposobu obliczania wagi można znaleźć [na stronie EMA]((http://mahjong-europe.org/ranking/Basicsranking.html)).</small>
+{% raw %}
 ## Agenda
 
-TBD
+Dostępna wkrótce!
 
 ## Rejestracja
 
@@ -54,31 +57,7 @@ TBD
 		aria-valuenow="{{ data | length }}"
 		aria-valuemin="0"
 		aria-valuemax="84">
-		Gracze: {{ data | length }}/84
-	</div>
-</div>
-
-<div class="progress" style="margin-bottom: 0.5em; font-size: 0.5rem; height: 0.7rem">
-	<div
-		class="progress-bar progress-bar-striped bg-success"
-		role="progressbar"
-		style="width: calc(100%*{{ [num_countries, 10] | min }}/10);"
-		aria-valuenow="{{ [num_countries, 10] | min }}"
-		aria-valuemin="0"
-		aria-valuemax="10">
-		Kraje biorące udział: {{ num_countries }}
-	</div>
-</div>
-
-<div class="progress" style="margin-bottom: 0.5em; font-size: 0.5rem; height: 0.7rem">
-	<div
-		class="progress-bar progress-bar-striped bg-success"
-		role="progressbar"
-		style="width: calc(100%*{{ num_mers }}/4);"
-		aria-valuenow="{{ num_mers }}"
-		aria-valuemin="0"
-		aria-valuemax="4">
-		<span>MERS <a href="http://mahjong-europe.org/ranking/Basicsranking.html" class="text-info">(co to?)</a>: {{ num_mers }}/4</span>
+		{{ data | length }}/84
 	</div>
 </div>
 
