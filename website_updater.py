@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 
 import argparse
+import csv
 import datetime
 import io
 import logging
 import pathlib
 import subprocess
 import urllib.request
-from typing import List, Dict
 
 import pytz
-from jinja2 import Environment, select_autoescape, FileSystemLoader
-import csv
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 COUNTRIES_PL = {
     "Poland": "Polska",
@@ -24,7 +23,7 @@ COUNTRIES_MAPPING = {v: k for k, v in COUNTRIES_PL.items()}
 log = logging.getLogger("website_updater")
 
 
-def process_response(val) -> Dict[str, str]:
+def process_response(val) -> dict[str, str]:
     country = val["Państwo/Country"].strip().title()
     country = COUNTRIES_MAPPING.get(country, country)
 
@@ -42,7 +41,7 @@ def request_csv(data_url: str) -> str:
         return response.read().decode("utf-8")
 
 
-def execute_cmd(cmd: List[str], cwd: str, dry_run: bool):
+def execute_cmd(cmd: list[str], cwd: str, dry_run: bool):
     log.info("Executing %s in %s", cmd, cwd)
     if dry_run:
         log.info("Dry run enabled; doing nothing")
@@ -93,9 +92,7 @@ def process(data_url: str, template_dir: str, repo: str, dry_run: bool):
 
         new_path = new_path.resolve()
         with (new_path.parent / new_path.stem).open("w") as f:
-            rendered = template.render(
-                data=responses, num_countries=num_countries, num_mers=num_mers, now=now
-            )
+            rendered = template.render(data=responses, num_countries=num_countries, num_mers=num_mers, now=now)
             if dry_run:
                 log.info("%s", rendered)
             else:
@@ -104,7 +101,7 @@ def process(data_url: str, template_dir: str, repo: str, dry_run: bool):
     create_pr(repo, branch_name, now, dry_run)
 
 
-def request_responses(data_url: str) -> List[Dict[str, str]]:
+def request_responses(data_url: str) -> list[dict[str, str]]:
     csv_data = request_csv(data_url)
     responses = list(csv.DictReader(io.StringIO(csv_data)))
     responses = list(map(process_response, responses))
@@ -127,11 +124,11 @@ def create_pr(repo: str, branch_name: str, now: datetime.datetime, dry_run: bool
     execute_cmd(["gh", "pr", "create", "--title", title, "--body", body], repo, dry_run)
 
 
-def calc_countries(responses: List[dict]):
+def calc_countries(responses: list[dict]):
     return len(set(val["country_en"] for val in responses))
 
 
-def calc_mers(responses: List[dict]):
+def calc_mers(responses: list[dict]):
     num_players = len(responses)
     num_countries = calc_countries(responses)
 
