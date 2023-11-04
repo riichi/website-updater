@@ -1,0 +1,22 @@
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+  "B",
+  "C4",
+  "DTZ",
+  "E",
+  "F",
+  "G",
+  "I",
+  "PIE",
+  "RUF",
+  "UP",
+  "W",
+]
+ignore = [
+  # unnecessary generator, use set comprehension
+  "C401",
+]

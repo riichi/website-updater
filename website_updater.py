@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 
 import argparse
+import csv
 import datetime
 import io
 import logging
 import pathlib
 import subprocess
 import urllib.request
-from typing import List, Dict
 
 import pytz
-from jinja2 import Environment, select_autoescape, FileSystemLoader
-import csv
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 COUNTRIES_PL = {
     "Poland": "Polska",
@@ -24,7 +23,7 @@ COUNTRIES_MAPPING = {v: k for k, v in COUNTRIES_PL.items()}
 log = logging.getLogger("website_updater")
 
 
-def process_response(val) -> Dict[str, str]:
+def process_response(val) -> dict[str, str]:
     country = val["Państwo/Country"].strip().title()
     country = COUNTRIES_MAPPING.get(country, country)
 
@@ -42,12 +41,17 @@ def request_csv(data_url: str) -> str:
         return response.read().decode("utf-8")
 
 
-def execute_cmd(cmd: List[str], cwd: str, dry_run: bool):
+def execute_cmd(cmd: list[str], cwd: str, dry_run: bool):
     log.info("Executing %s in %s", cmd, cwd)
     if dry_run:
         log.info("Dry run enabled; doing nothing")
     else:
         subprocess.check_call(cmd, cwd=cwd, stdout=subprocess.DEVNULL)
+
+
+def execute_cmd_with_stdout(cmd: list[str], cwd: str) -> bytes:
+    log.info("Executing %s in %s", cmd, cwd)
+    return subprocess.check_output(cmd, cwd=cwd)
 
 
 def main():
@@ -60,17 +64,14 @@ def main():
     parser.add_argument("--data", required=True, help="CSV data URL")
     parser.add_argument("--template", required=True, help="Template directory path")
     parser.add_argument("--repository", required=True, help="git repository path")
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Only print the changes and don't modify any files",
-    )
+    parser.add_argument("--dry-run", action="store_true", help="Only print the changes and don't modify any files")
+    parser.add_argument("--force", action="store_true", help="Always create a PR, even with no new changes.")
     args = parser.parse_args()
 
-    process(args.data, args.template, args.repository, args.dry_run)
+    process(args.data, args.template, args.repository, args.dry_run, args.force)
 
 
-def process(data_url: str, template_dir: str, repo: str, dry_run: bool):
+def process(data_url: str, template_dir: str, repo: str, dry_run: bool, force: bool):
     responses = request_responses(data_url)
     num_countries = calc_countries(responses)
     num_mers = calc_mers(responses)
@@ -93,18 +94,16 @@ def process(data_url: str, template_dir: str, repo: str, dry_run: bool):
 
         new_path = new_path.resolve()
         with (new_path.parent / new_path.stem).open("w") as f:
-            rendered = template.render(
-                data=responses, num_countries=num_countries, num_mers=num_mers, now=now
-            )
+            rendered = template.render(data=responses, num_countries=num_countries, num_mers=num_mers, now=now)
             if dry_run:
                 log.info("%s", rendered)
             else:
                 f.write(rendered)
 
-    create_pr(repo, branch_name, now, dry_run)
+    create_pr(repo, branch_name, now, dry_run, force)
 
 
-def request_responses(data_url: str) -> List[Dict[str, str]]:
+def request_responses(data_url: str) -> list[dict[str, str]]:
     csv_data = request_csv(data_url)
     responses = list(csv.DictReader(io.StringIO(csv_data)))
     responses = list(map(process_response, responses))
@@ -119,19 +118,36 @@ def cleanup_repo(repo: str, branch_name: str, dry_run: bool):
     execute_cmd(["git", "checkout", "-b", branch_name], repo, dry_run)
 
 
-def create_pr(repo: str, branch_name: str, now: datetime.datetime, dry_run: bool):
+def create_pr(repo: str, branch_name: str, now: datetime.datetime, dry_run: bool, force: bool):
     title = f"chore: update to {now.strftime('%Y-%m-%d %H:%M')}"
     body = f"Automatic update of the website posts. Data retrieval timestamp: {now}"
+
+    if not force and not has_new_changes(repo):
+        log.info("No new changes, skipping PR creation")
+        return
+
     execute_cmd(["git", "commit", "-a", "-m", title], repo, dry_run)
     execute_cmd(["git", "push", "-u", "origin", branch_name], repo, dry_run)
     execute_cmd(["gh", "pr", "create", "--title", title, "--body", body], repo, dry_run)
 
 
-def calc_countries(responses: List[dict]):
+def has_new_changes(repo: str) -> bool:
+    diff = execute_cmd_with_stdout(["git", "difftool", "--extcmd=diff", "--no-prompt"], repo).decode()
+    for line in diff.splitlines():
+        if not line.startswith(("> ", "< ")):
+            continue
+        stripped_line = line[2:]
+        if stripped_line.startswith("last_modified_at: "):
+            continue
+        return True
+    return False
+
+
+def calc_countries(responses: list[dict]):
     return len(set(val["country_en"] for val in responses))
 
 
-def calc_mers(responses: List[dict]):
+def calc_mers(responses: list[dict]):
     num_players = len(responses)
     num_countries = calc_countries(responses)
 
