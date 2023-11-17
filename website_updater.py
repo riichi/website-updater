@@ -19,6 +19,7 @@ COUNTRIES_PL = {
     "France": "Francja",
     "Germany": "Niemcy",
     "Czech Republic": "Czechy",
+    "Sweden": "Szwecja",
 }
 
 COUNTRIES_MAPPING = {v: k for k, v in COUNTRIES_PL.items()}
