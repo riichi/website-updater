@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+import dataclasses
 import datetime
 import io
 import logging
@@ -12,14 +13,53 @@ import urllib.request
 import pytz
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+EMA_COUNTRIES = {
+    "Austria",
+    "Belgium",
+    "Czech Republic",
+    "Denmark",
+    "Finland",
+    "France",
+    "Germany",
+    "Hungary",
+    "Ireland",
+    "Italy",
+    "Netherlands",
+    "Norway",
+    "Poland",
+    "Portugal",
+    "Romania",
+    "Slovakia",
+    "Spain",
+    "Sweden",
+    "Switzerland",
+    "Ukraine",
+    "United Kingdom",
+}
+
 COUNTRIES_PL = {
-    "Poland": "Polska",
-    "Portugal": "Portugalia",
-    "Ukraine": "Ukraina",
+    "Austria": "Austria",
+    "Belgium": "Belgia",
+    "Canada": "Kanada",
+    "Czech Republic": "Czechy",
+    "Denmark": "Dania",
+    "Finland": "Finlandia",
     "France": "Francja",
     "Germany": "Niemcy",
-    "Czech Republic": "Czechy",
+    "Hungary": "Węgry",
+    "Ireland": "Irlandia",
+    "Italy": "Włochy",
+    "Netherlands": "Holandia",
+    "Norway": "Norwegia",
+    "Poland": "Polska",
+    "Portugal": "Portugalia",
+    "Romania": "Rumunia",
+    "Slovakia": "Słowacja",
+    "Spain": "Hiszpania",
     "Sweden": "Szwecja",
+    "Switzerland": "Szwajcaria",
+    "Ukraine": "Ukraina",
+    "United Kingdom": "Wielka Brytania",
 }
 
 COUNTRIES_MAPPING = {v: k for k, v in COUNTRIES_PL.items()}
@@ -27,17 +67,26 @@ COUNTRIES_MAPPING = {v: k for k, v in COUNTRIES_PL.items()}
 log = logging.getLogger("website_updater")
 
 
-def process_response(val) -> dict[str, str]:
+@dataclasses.dataclass
+class PlayerRecord:
+    first_name: str
+    last_name: str
+    ema_id: str
+    country_pl: str
+    country_en: str
+
+
+def process_response(val) -> PlayerRecord:
     country = val["Państwo/Country"].strip().title()
     country = COUNTRIES_MAPPING.get(country, country)
 
-    return {
-        "first_name": val["Imię/First name"].strip(),
-        "last_name": val["Nazwisko/Last name"].strip(),
-        "ema_id": val["EMA ID"].strip(),
-        "country_pl": COUNTRIES_PL.get(country, country),
-        "country_en": country,
-    }
+    return PlayerRecord(
+        first_name=val["Imię/First name"].strip(),
+        last_name=val["Nazwisko/Last name"].strip(),
+        ema_id=val["EMA ID"].strip(),
+        country_pl=COUNTRIES_PL.get(country, country),
+        country_en=country,
+    )
 
 
 def request_csv(data_url: str) -> str:
@@ -107,7 +156,7 @@ def process(data_url: str, template_dir: str, repo: str, dry_run: bool, force: b
     create_pr(repo, branch_name, now, dry_run, force)
 
 
-def request_responses(data_url: str) -> list[dict[str, str]]:
+def request_responses(data_url: str) -> list[PlayerRecord]:
     csv_data = request_csv(data_url)
     responses = list(csv.DictReader(io.StringIO(csv_data)))
     responses = list(map(process_response, responses))
@@ -147,11 +196,13 @@ def has_new_changes(repo: str) -> bool:
     return False
 
 
-def calc_countries(responses: list[dict]):
-    return len(set(val["country_en"] for val in responses))
+def calc_countries(responses: list[PlayerRecord]):
+    countries = set(val.country_en for val in responses)
+    ema_countries = countries.intersection(EMA_COUNTRIES)
+    return len(ema_countries)
 
 
-def calc_mers(responses: list[dict]):
+def calc_mers(responses: list[PlayerRecord]):
     num_players = len(responses)
     num_countries = calc_countries(responses)
 
