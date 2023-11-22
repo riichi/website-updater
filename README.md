@@ -2,7 +2,7 @@
 
 Simple script that updates tournament pages on our website using a CSV file.
 
-This script automatically creates a PR using GitHub CLI. 
+This script automatically creates a PR using GitHub CLI.
 
 ## Requirements
 
@@ -21,4 +21,4 @@ Example usage:
   --repository chombo.club
 ```
 
-The repository (`chombo.club` in this case) must be cloned first. 
+The repository (`chombo.club` in this case) must be cloned first.
