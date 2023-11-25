@@ -73,6 +73,7 @@ log = logging.getLogger("website_updater")
 class PlayerRecord:
     first_name: str
     last_name: str
+    nickname: str
     ema_id: str
     country_pl: str
     country_en: str
@@ -85,6 +86,7 @@ def process_response(val) -> PlayerRecord:
     return PlayerRecord(
         first_name=val["Imię/First name"].strip(),
         last_name=val["Nazwisko/Last name"].strip(),
+        nickname=val["Pseudonim/Nickname"].strip(),
         ema_id=val["EMA ID"].strip(),
         country_pl=COUNTRIES_PL.get(country, country),
         country_en=country,
