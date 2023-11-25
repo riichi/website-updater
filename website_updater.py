@@ -13,6 +13,8 @@ import urllib.request
 import pytz
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+MAX_PARTICIPANTS = 84
+
 EMA_COUNTRIES = {
     "Austria",
     "Belgium",
@@ -126,8 +128,10 @@ def main():
 
 def process(data_url: str, template_dir: str, repo: str, dry_run: bool, force: bool):
     responses = request_responses(data_url)
-    num_countries = calc_countries(responses)
-    num_mers = calc_mers(responses)
+    participants = responses[:MAX_PARTICIPANTS]
+    waiting_list = responses[MAX_PARTICIPANTS:]
+    num_countries = calc_countries(participants)
+    num_mers = calc_mers(participants)
 
     env = Environment(loader=FileSystemLoader("."), autoescape=select_autoescape())
 
@@ -147,7 +151,13 @@ def process(data_url: str, template_dir: str, repo: str, dry_run: bool, force: b
 
         new_path = new_path.resolve()
         with (new_path.parent / new_path.stem).open("w") as f:
-            rendered = template.render(data=responses, num_countries=num_countries, num_mers=num_mers, now=now)
+            rendered = template.render(
+                participants=participants,
+                waiting_list=waiting_list,
+                num_countries=num_countries,
+                num_mers=num_mers,
+                now=now,
+            )
             if dry_run:
                 log.info("%s", rendered)
             else:

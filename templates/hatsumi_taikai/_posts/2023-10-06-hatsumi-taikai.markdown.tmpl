@@ -32,7 +32,7 @@ Zapraszamy Was na drugi turniej MERS w Krakowie!
 Punkty będą śledzone za pomocą mobilnej aplikacji [Mahjong Tracker](https://mahjongtracker.com/) - polecamy zapoznać się
 z jej działaniem przed turniejem.
 {% endraw %}
-Z reprezentantami **{{ num_countries }}** krajów EMA i łączną liczbą **{{ data | length }}** graczy, aktualny ranking turnieju MERS wynosi **{{ "%.1f" | format(num_mers) }}** (maksimum to 4.0).\
+Z reprezentantami **{{ num_countries }}** krajów EMA i łączną liczbą **{{ participants | length }}** graczy, aktualny ranking turnieju MERS wynosi **{{ "%.1f" | format(num_mers) }}** (maksimum to 4.0).\
 <small>Statystyka ta aktualizuje się automatycznie. Szczegóły dotyczące sposobu obliczania wagi można znaleźć [na stronie EMA](http://mahjong-europe.org/ranking/Basicsranking.html).</small>
 {% raw %}
 ## Agenda
@@ -40,9 +40,11 @@ Z reprezentantami **{{ num_countries }}** krajów EMA i łączną liczbą **{{ d
 Dostępna wkrótce!
 
 ## Rejestracja
+{% endraw %}
+{% if participants | length == 84 %}**NOTE:** Obecnie lista zawodników jest pełna &mdash; nadal jednak można zapisać się na listę oczekujących i wziąć udział w turnieju, jeśli któryś z zarejestrowanych graczy zrezygnuje.
 
-**[Zapisy na turniej](https://forms.gle/Q9MxGdNQU1fJbf746)**
-
+{% endif %}**[Zapisy na turniej](https://forms.gle/Q9MxGdNQU1fJbf746)**
+{% raw %}
 **UWAGA:** Rejestracja zostanie zamknięta 31 stycznia &mdash; jest to ostatni dzień na wysłanie ważnego zgłoszenia.
 
 ## Gracze
@@ -53,18 +55,31 @@ Dostępna wkrótce!
 	<div
 		class="progress-bar progress-bar-striped"
 		role="progressbar"
-		style="width: calc(100%*{{ data | length }}/84);"
-		aria-valuenow="{{ data | length }}"
+		style="width: calc(100%*{{ participants | length }}/84);"
+		aria-valuenow="{{ participants | length }}"
 		aria-valuemin="0"
 		aria-valuemax="84">
-		{{ data | length }}/84
+		{{ participants | length }}/84
 	</div>
 </div>
 
-<div id="biggus-tablus" markdown="block">
+<div class="biggus-tablus" markdown="block">
 
 | Nr | Imię i nazwisko                          | Kraj                 | EMA ID                                                              |
 |---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
-{% for val in data %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_pl.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+{% for val in participants %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_pl.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
 {% endfor %}
 </div>
+
+{% if waiting_list %}### Lista oczekujących
+
+Gracze będą przeniesieni z listy oczekujących jeżeli któryś z zapisanych uczestników zrezygnuje z udziału. Będzie to robione w kolejności zgłoszeń.
+
+<div class="biggus-tablus" markdown="block">
+
+| Nr | Imię i nazwisko                          | Kraj                 | EMA ID                                                              |
+|---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
+{% for val in waiting_list %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_pl.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+{% endfor %}
+</div>
+{% endif %}
