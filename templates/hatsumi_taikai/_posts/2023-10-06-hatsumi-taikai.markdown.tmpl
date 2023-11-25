@@ -41,7 +41,7 @@ Dostępna wkrótce!
 
 ## Rejestracja
 {% endraw %}
-{% if participants | length == 84 %}**NOTE:** Obecnie lista zawodników jest pełna &mdash; nadal jednak można zapisać się na listę oczekujących i wziąć udział w turnieju, jeśli któryś z zarejestrowanych graczy zrezygnuje.
+{% if participants | length == 84 %}**UWAGA:** Obecnie lista zawodników jest pełna &mdash; nadal jednak można zapisać się na listę oczekujących i wziąć udział w turnieju, jeśli któryś z zarejestrowanych graczy zrezygnuje.
 
 {% endif %}**[Zapisy na turniej](https://forms.gle/Q9MxGdNQU1fJbf746)**
 {% raw %}
@@ -65,9 +65,9 @@ Dostępna wkrótce!
 
 <div class="biggus-tablus" markdown="block">
 
-| Nr | Imię i nazwisko                          | Kraj                 | EMA ID                                                              |
-|---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
-{% for val in participants %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_pl.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+| Nr | Imię i nazwisko                          | Pseudonim            | Kraj                 | EMA ID                                                              |
+|---:|:-----------------------------------------|:---------------------|:---------------------|:--------------------------------------------------------------------|
+{% for val in participants %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.nickname.ljust(20) }} | {{ val.country_pl.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
 {% endfor %}
 </div>
 
@@ -77,9 +77,9 @@ Gracze będą przeniesieni z listy oczekujących jeżeli któryś z zapisanych u
 
 <div class="biggus-tablus" markdown="block">
 
-| Nr | Imię i nazwisko                          | Kraj                 | EMA ID                                                              |
-|---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
-{% for val in waiting_list %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_pl.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+| Nr | Imię i nazwisko                          | Pseudonim            | Kraj                 | EMA ID                                                              |
+|---:|:-----------------------------------------|:---------------------|:---------------------|:--------------------------------------------------------------------|
+{% for val in waiting_list %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.nickname.ljust(20) }} | {{ val.country_pl.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
 {% endfor %}
 </div>
 {% endif %}

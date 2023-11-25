@@ -65,9 +65,9 @@ Coming soon!
 
 <div class="biggus-tablus" markdown="block">
 
-| Nr | Name                                     | Country              | EMA ID                                                              |
-|---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
-{% for val in participants %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+| Nr | Name                                     | Nickname             | Country              | EMA ID                                                              |
+|---:|:-----------------------------------------|:---------------------|:---------------------|:--------------------------------------------------------------------|
+{% for val in participants %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.nickname.ljust(20) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
 {% endfor %}
 </div>
 
@@ -77,9 +77,9 @@ Players will be moved off the waiting list if any of the registered participants
 
 <div class="biggus-tablus" markdown="block">
 
-| Nr | Name                                     | Country              | EMA ID                                                              |
-|---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
-{% for val in waiting_list %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+| Nr | Name                                     | Nickname             | Country              | EMA ID                                                              |
+|---:|:-----------------------------------------|:---------------------|:---------------------|:--------------------------------------------------------------------|
+{% for val in waiting_list %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.nickname.ljust(20) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
 {% endfor %}
 </div>
 {% endif %}
