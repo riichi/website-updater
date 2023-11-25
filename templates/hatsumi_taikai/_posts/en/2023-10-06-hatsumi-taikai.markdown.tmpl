@@ -32,7 +32,7 @@ We invite you to the second MERS tournament in Kraków!
 Scores will be tracked using [Mahjong Tracker](https://mahjongtracker.com/) - players are advised to familiarize
 themselves with the app before the tournament.
 {% endraw %}
-With representants of **{{ num_countries }}** different EMA countries and a total number of **{{ data | length }}** contestants, the current MERS tournament ranking is **{{ "%.1f" | format(num_mers) }}** (with 4.0 being the maximum).\
+With representants of **{{ num_countries }}** different EMA countries and a total number of **{{ participants | length }}** contestants, the current MERS tournament ranking is **{{ "%.1f" | format(num_mers) }}** (with 4.0 being the maximum).\
 <small>This statistic updates automatically. The details on how the weight is calculated can be found on [the EMA website](http://mahjong-europe.org/ranking/Basicsranking.html).</small>
 {% raw %}
 ## Agenda
@@ -40,9 +40,11 @@ With representants of **{{ num_countries }}** different EMA countries and a tota
 Coming soon!
 
 ## Registration
+{% endraw %}
+{% if participants | length == 84 %}**NOTE:** Currently, the tournament is full &mdash; however, you can still sign up for the waiting list and participate in the tournament if any of the registered players drop out.
 
-**[Register here](https://forms.gle/Q9MxGdNQU1fJbf746)**
-
+{% endif %}**[Register here](https://forms.gle/Q9MxGdNQU1fJbf746)**
+{% raw %}
 **ATTENTION:** Registration will be closed on January 31st &mdash; it will be the last day to submit your application.
 
 ## Players
@@ -53,18 +55,31 @@ Coming soon!
 	<div
 		class="progress-bar progress-bar-striped"
 		role="progressbar"
-		style="width: calc(100%*{{ data | length }}/84);"
-		aria-valuenow="{{ data | length }}"
+		style="width: calc(100%*{{ participants | length }}/84);"
+		aria-valuenow="{{ participants | length }}"
 		aria-valuemin="0"
 		aria-valuemax="84">
-		{{ data | length }}/84
+		{{ participants | length }}/84
 	</div>
 </div>
 
-<div id="biggus-tablus" markdown="block">
+<div class="biggus-tablus" markdown="block">
 
 | Nr | Name                                     | Country              | EMA ID                                                              |
 |---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
-{% for val in data %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+{% for val in participants %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
 {% endfor %}
 </div>
+
+{% if waiting_list %}### Waiting list
+
+Players will be moved off the waiting list if any of the registered participants drop out. This will be done on a first come, first served basis.
+
+<div class="biggus-tablus" markdown="block">
+
+| Nr | Name                                     | Country              | EMA ID                                                              |
+|---:|:-----------------------------------------|:---------------------|:--------------------------------------------------------------------|
+{% for val in waiting_list %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} |
+{% endfor %}
+</div>
+{% endif %}
