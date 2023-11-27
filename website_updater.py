@@ -41,6 +41,7 @@ EMA_COUNTRIES = {
 
 COUNTRIES_PL = {
     "Austria": "Austria",
+    "Belarus": "Białoruś",
     "Belgium": "Belgia",
     "Canada": "Kanada",
     "Czech Republic": "Czechy",
