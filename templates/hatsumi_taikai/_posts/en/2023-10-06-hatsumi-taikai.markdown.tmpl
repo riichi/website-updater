@@ -146,7 +146,7 @@ With representants of **{{ num_countries }}** different EMA countries and a tota
 
 | Nr | Name                                     | Nickname             | Country              | EMA ID                                                              |                         Fee                          |
 |---:|:-----------------------------------------|:---------------------|:---------------------|:--------------------------------------------------------------------|:----------------------------------------------------:|
-{% for val in participants %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.nickname.ljust(20) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} | <i aria-hidden="true" class="fa fa-fw fa-{% if val.paid %}check{% else %}times{% endif %}"></i> |
+{% for val in participants %}| {{ "{0}".format(loop.index).rjust(2) }} | {{ "{0} {1}".format(val.first_name, val.last_name).ljust(40) }} | {{ val.nickname.ljust(20) }} | {{ val.country_en.ljust(20) }} | {% if val.ema_id %}[{{ val.ema_id }}](http://mahjong-europe.org/ranking/Players/{{ val.ema_id }}.html){% else %}{{ "".ljust(67) }}{% endif %} | {% if val.paid %}<i aria-hidden="true" class="fa fa-fw fa-check"></i>{% else %}{{ "".ljust(52) }}{% endif %} |
 {% endfor %}
 </div>
 
