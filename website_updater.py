@@ -78,6 +78,7 @@ class PlayerRecord:
     ema_id: str
     country_pl: str
     country_en: str
+    paid: bool
 
 
 def process_response(val) -> PlayerRecord:
@@ -91,6 +92,7 @@ def process_response(val) -> PlayerRecord:
         ema_id=val["EMA ID"].strip(),
         country_pl=COUNTRIES_PL.get(country, country),
         country_en=country,
+        paid=val["Wpisowe"] == "TRUE",
     )
 
 
